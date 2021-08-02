@@ -7,11 +7,17 @@ require('dotenv').config()
 
 //cors
 app.use(cors())
+
+app.use(express.json())
+
+
 dbConnection();
+
+
 //rutas
-app.get("/", (req,res)=>{
-    res.json({ok:true, msg: "prueba"})
-})
+ app.use("/api/usuarios", require("./routes/users"))
+
+
 
 const port = process.env.PORT
 
