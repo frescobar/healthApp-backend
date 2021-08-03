@@ -28,6 +28,15 @@ const userSchema = Schema({
         type: Boolean,
         default: false
     },
+});
+
+// sacar el password de la respuesta y __V
+userSchema.method('toJSON', function(){
+    const {__v,password,...object} = this.toObject();
+
+    return object
 })
+
+
 
 module.exports = model('User', userSchema);
