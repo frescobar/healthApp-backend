@@ -1,6 +1,8 @@
 const User = require("../models/Users");
 const bcrypt = require("bcryptjs");
 const { generateJWT } = require('../helpers/jwt');
+const { googleVerify } = require('../helpers/google-verify');
+
 const login = async(req,res)=>{
     try {
 
@@ -39,8 +41,58 @@ const login = async(req,res)=>{
             msg: "Error inesperado"
         })
     }
+
+
+}
+
+const googleSignin =  async(req,res)=>{
+
+    const googleToken = req.body.token;
+    
+
+    try {
+       const {name,email,picture} = await googleVerify(googleToken);
+       const userDB = await User.findOne({email});
+ let user;
+       //Si no existre el usuario creamos un usuario con los datos de google
+       if(!userDB){
+           user = new User({
+               nombre:name,
+               email,
+               password: "@@@@",
+               img:picture,
+               google:true
+           })
+
+       }
+       else{
+           user =  userDB,
+           user.google = true
+       }
+
+       await user.save()
+
+       //generar token
+       const token = await generateJWT(userDB.id);
+
+
+        res.json({
+            ok:true,
+            token
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(401).json({
+            ok:false,
+            msg:"Toke no es válido"
+        })
+        
+    }
+
+  
 }
 
 module.exports = {
-    login
+    login,
+    googleSignin
 }

@@ -14,6 +14,10 @@ app.use(express.json())
 //DB connection
 dbConnection();
 
+//Directorio público
+
+app.use(express.static("public"));
+
 
 //rutas
  app.use("/api/usuarios", require("./routes/users"));
@@ -28,3 +32,6 @@ dbConnection();
 const port = process.env.PORT
 
 app.listen(port, ()=>console.log("running on port "+ port))
+
+
+
