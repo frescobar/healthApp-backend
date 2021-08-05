@@ -1,24 +1,41 @@
 const User = require("../models/Users");
 const bcrypt = require("bcryptjs");
 const {generateJWT} = require("../helpers/jwt")
+
+
+
 //GET USUARIO
 const getUsers = async (req, res) => {
-  const users = await User.find({}, "nombre email google role");
+
+  //Obtener el query que viene en el request
+  const desde = Number(req.query.desde) || 0;
+ 
+  // const users = await User.find({}, "nombre email google role").skip(desde).limit(5)
+  // const total = await User.countDocuments()
+
+  // dos promesas que se ejecuta simultaneamente
+  const [users,total]= await Promise.all([ User.find({}, "nombre email google role img").skip(desde).limit(5),
+  User.countDocuments()
+
+    ]
+  )
 
   res.json({
     ok: true,
     users,
+    total
   });
 };
 
 // POST USUARIO(crear)
 const createUser = async (req, res) => {
+  console.log(req.id)
   try {
     const userExists = await User.findOne({ email: req.body.email });
     if (userExists) {
       return res.status(400).json({
         ok: false,
-        msg: "El usuario ya existe",
+        msg: 'El usuario ya existe',
       });
     }
     //creacion usuario con la data que viene del request

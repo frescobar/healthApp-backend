@@ -8,15 +8,20 @@ require('dotenv').config()
 //cors
 app.use(cors())
 
+//json middleware
 app.use(express.json())
 
-
+//DB connection
 dbConnection();
 
 
 //rutas
- app.use("/api/usuarios", require("./routes/users"))
- app.use("/api/login", require("./routes/auth"))
+ app.use("/api/usuarios", require("./routes/users"));
+ app.use("/api/login", require("./routes/auth"));
+ app.use("/api/hospitales", require("./routes/hospitales"));
+ app.use("/api/doctores", require("./routes/doctor"));
+ app.use("/api/todo", require("./routes/busqueda"));
+ app.use("/api/upload", require("./routes/uploads"));
 
 
 

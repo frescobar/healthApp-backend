@@ -12,7 +12,8 @@ const validateToken = (req,res,next)=>{
     try {
         const {id} = jwt.verify(token,process.env.JWT_SECRET_KEY);
 
-        console.log(id)
+        //Se le asigna a la req.id el id del usuario de su token
+        req.id = id
         
     } catch (error) {
         return res.status(401).json({
@@ -20,7 +21,7 @@ const validateToken = (req,res,next)=>{
             msg: "Token incorrecto"
         })
     }
-
+ 
 
     next();
 }
