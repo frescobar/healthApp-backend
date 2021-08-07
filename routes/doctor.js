@@ -20,10 +20,13 @@ router.get("/",validateToken, getDoctores)
   )
 
  //UPDATE DOCTORES
- router.put("/:id", updateDoctor)
+ router.put("/:id",  [
+  validateToken,
+  check("nombre", "El nombre del doctor es requerido").not().isEmpty(),
+ ] ,updateDoctor)
 
  //DFELETE DOCTORES
- router.delete("/:id", deleteDoctor)
+ router.delete("/:id",validateToken, deleteDoctor)
 
 
 module.exports = router;

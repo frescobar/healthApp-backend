@@ -48,19 +48,68 @@ const doctor = new Doctor({
 
 //UPDATE DOCTOR
 const updateDoctor = async (req, res) => {
-  res.json({
-    ok: true,
-    msg: "doctor actualizado",
-  });
+  const id = req.params.id;
+  const doctorDB = await Doctor.findById(id);
+
+  if(!doctorDB){
+    return  res.status(404).json({
+      ok:false,
+      msg: "Doctor no encontrado por id",
+    })
+  }
+
+  const updatedDoctor = {
+    ...req.body,
+    usuario:id
+  }
+
+
+ try {
+   
+  const newDoctor= await Doctor.findByIdAndUpdate(id, updatedDoctor, {new:true})
+
+   return res.json({
+     ok:true,
+     doctor: newDoctor
+   })
+   
+ } catch (error) {
+return res.status(500).json({
+  ok:false,
+  msg:"Error inesperado"
+})
+ }
 };
 
 
 //DELETE DOCTOR 
 const deleteDoctor = async (req, res) => {
-  res.json({
-    ok: true,
-    msg: "doctor eliminado",
-  });
+  const id = req.params.id;
+  const doctorDB = await Doctor.findById(id);
+
+  if(!doctorDB){
+    return  res.status(404).json({
+      ok:false,
+      msg: "Doctor no encontrado por id",
+    })
+  }
+
+
+ try {
+   
+ await Doctor.findByIdAndDelete(id)
+
+   return res.json({
+     ok:true,
+     msg: "Doctor eliminado"
+   })
+   
+ } catch (error) {
+return res.status(500).json({
+  ok:false,
+  msg:"Error inesperado"
+})
+ }
 };
 
 module.exports = {

@@ -24,9 +24,10 @@ router.post(
 );
 
 //UPDATE HOSPITAL
-router.put("/:id", updateHospital);
+router.put("/:id",validateToken,[ check("nombre", "El nombre del hospital es requerido").not().isEmpty(),
+validateFields] ,updateHospital);
 
 //DFELETE
-router.delete("/:id", deleteHospital);
+router.delete("/:id", validateToken,deleteHospital);
 
 module.exports = router;
